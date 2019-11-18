@@ -41,7 +41,7 @@ class ServerUtil {
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    var body = response.body!!.string()
+                    var body = response.body()!!.string()
 //                    Log.d("서버", body)
                     var json = JSONObject(body)
 
@@ -60,7 +60,7 @@ class ServerUtil {
             val requestUrl = urlBuilder.build().toString()
             Log.d("요청URL", requestUrl)
 
-            val request = Request.Builder().url(requestUrl).header("X-Http-Token", ContextUtil.getUserToken(context))
+            val request = Request.Builder().url(requestUrl).header("X-Http-Token", ContextUtil.getUserToken(context)).build()
 
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -68,7 +68,7 @@ class ServerUtil {
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    var body = response.body!!.string()
+                    var body = response.body()!!.string()
 //                    Log.d("서버", body)
                     var json = JSONObject(body)
 
