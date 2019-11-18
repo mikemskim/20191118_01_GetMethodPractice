@@ -1,10 +1,14 @@
 package com.tj.a20191118_01_getmethodpractice
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.tj.a20191118_01_getmethodpractice.utils.ContextUtil
+import com.tj.a20191118_01_getmethodpractice.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_login.*
+import org.json.JSONObject
 
 class LoginActivity : BaseActivity() {
 
@@ -31,6 +35,28 @@ class LoginActivity : BaseActivity() {
             }
         }
         loginBtn.setOnClickListener {
+
+            ServerUtil.postRequestLogin(mContext, idEdt.text.toString(), pwEdt.text.toString(),
+                object : ServerUtil.jsonResponseHandler {
+                    override fun onResponse(json: JSONObject) {
+                        Log.d("로그인응답", json.toString())
+
+                        val code = json.getInt("code")
+
+                        if (code == 200) {
+                            val data = json.getJSONObject("data")
+                            val token = data.getString("token")
+                            ContextUtil.setUserToken(mContext, token)
+
+                            val intent = Intent(mContext, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+
+                        }
+                    }
+
+                })
 
             if(rememberIdCheckBox.isChecked) {
                 ContextUtil.setUserId(mContext, idEdt.text.toString())

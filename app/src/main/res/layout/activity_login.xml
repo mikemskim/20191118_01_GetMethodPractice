@@ -28,7 +28,7 @@
         android:id="@+id/pwEdt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"/>
+        android:inputType="textPassword"/>
 
     <CheckBox
         android:id="@+id/rememberIdCheckBox"
