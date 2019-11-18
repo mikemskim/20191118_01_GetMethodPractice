@@ -15,7 +15,12 @@ class ServerUtil {
     companion object {
         var BASE_URL = "http://192.168.0.26:5000"
 
-        fun postRequestLogin(context: Context, loginId:String, loginPw:String, handler: jsonResponseHandler?) {
+        fun postRequestLogin(
+            context: Context,
+            loginId: String,
+            loginPw: String,
+            handler: jsonResponseHandler?
+        ) {
 
 //            우리가 만드는 앱을 클라이언트 역할로 동작하게 해주는 클래스
             var client = OkHttpClient()
@@ -24,7 +29,8 @@ class ServerUtil {
             var url = "${BASE_URL}/auth"
 
 //            POST 메소드에서 요구하는 파라미터를 FormBody에 담아줌
-            var formBody = FormBody.Builder().add("login_id", loginId).add("password",loginPw).build()
+            var formBody =
+                FormBody.Builder().add("login_id", loginId).add("password", loginPw).build()
 
 //            실제로 날아갈 요청(request)을 생성
             var request = Request.Builder().url(url).post(formBody).build()
@@ -41,6 +47,34 @@ class ServerUtil {
 
                     handler?.onResponse(json)
                 }
+            })
+        }
+
+        fun getRequestMyInfo(context: Context, handler: jsonResponseHandler?) {
+            var client = OkHttpClient()
+            var urlBuilder = HttpUrl.parse("${BASE_URL}/my_info")!!.newBuilder()
+
+//            GET 방식의 파라미터를 첨부하는 방법
+            urlBuilder.addEncodedQueryParameter("device_token", "test")
+
+            val requestUrl = urlBuilder.build().toString()
+            Log.d("요청URL", requestUrl)
+
+            val request = Request.Builder().url(requestUrl).header("X-Http-Token", ContextUtil.getUserToken(context))
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.d("서버통신에러", e.localizedMessage)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    var body = response.body!!.string()
+//                    Log.d("서버", body)
+                    var json = JSONObject(body)
+
+                    handler?.onResponse(json)
+                }
+
             })
         }
     }
