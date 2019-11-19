@@ -29,8 +29,7 @@ class ServerUtil {
             var url = "${BASE_URL}/auth"
 
 //            POST 메소드에서 요구하는 파라미터를 FormBody에 담아줌
-            var formBody =
-                FormBody.Builder().add("login_id", loginId).add("password", loginPw).build()
+            var formBody = FormBody.Builder().add("login_id", loginId).add("password", loginPw).build()
 
 //            실제로 날아갈 요청(request)을 생성
             var request = Request.Builder().url(url).post(formBody).build()
